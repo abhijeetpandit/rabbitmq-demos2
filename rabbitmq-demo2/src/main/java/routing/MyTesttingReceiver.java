@@ -1,7 +1,9 @@
 package routing;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,10 +17,12 @@ import com.rabbitmq.client.Envelope;
 public class MyTesttingReceiver {
 	public static void main(String[] args) throws Exception {
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost("localhost");
-		//factory.setUsername("insync");
-		//factory.setPassword("admin123");
-		
+		Properties props = new Properties();
+		props.load(new FileInputStream("rabbitmq.properties"));
+		factory.setHost(props.getProperty("url"));
+		factory.setUsername(props.getProperty("userName"));
+		factory.setPassword(props.getProperty("password"));
+		System.out.println("Using props : " + props);
 		
 		/*
 		 * for (int count = 0; count < MyTesting.MAX_THREADS; count++) { ExecutorService

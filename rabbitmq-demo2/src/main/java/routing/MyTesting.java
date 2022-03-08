@@ -1,7 +1,9 @@
 package routing;
 
+import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 import java.util.Random;
 
 import com.rabbitmq.client.AMQP;
@@ -58,9 +60,12 @@ public class MyTesting {
 
 	public static void main(String[] args) throws Exception {
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setHost("localhost");
-		factory.setUsername("admin");
-		factory.setPassword("admin");
+		Properties props = new Properties();
+		props.load(new FileInputStream("rabbitmq.properties"));
+		factory.setHost(props.getProperty("url"));
+		factory.setUsername(props.getProperty("userName"));
+		factory.setPassword(props.getProperty("password"));
+		System.out.println("Using props : " + props);
         Random r = new Random();
         try (Connection connection = factory.newConnection(); Channel channel = connection.createChannel()) {
         	channel.exchangeDeclare(EXCHANGE_NAME, "direct", true);
